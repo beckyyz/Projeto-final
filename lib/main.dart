@@ -219,8 +219,9 @@ class _TravelJournalHomeState extends State<TravelJournalHome> {
                       fontSize: 24,
                     ),
                   ),
+                  // Ícone corrigido para seta apontando para a direita
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    icon: const Icon(Icons.arrow_forward, color: Colors.white),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
