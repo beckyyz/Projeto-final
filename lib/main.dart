@@ -193,6 +193,16 @@ class _TravelJournalHomeState extends State<TravelJournalHome> {
         title: const Text('Diário de Viagens'),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        // Botão personalizado para abrir o drawer com tooltip
+        leading: Builder(
+          builder: (context) => Tooltip(
+            message: 'Abrir menu de navegação',
+            child: IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.note_add),
@@ -219,10 +229,13 @@ class _TravelJournalHomeState extends State<TravelJournalHome> {
                       fontSize: 24,
                     ),
                   ),
-                  // Ícone corrigido para seta apontando para a direita
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward, color: Colors.white),
-                    onPressed: () => Navigator.pop(context),
+                  // Ícone com tooltip para voltar
+                  Tooltip(
+                    message: 'Voltar para tela principal',
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_forward, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
                   ),
                 ],
               ),
@@ -317,6 +330,16 @@ class TripDetailsScreen extends StatelessWidget {
         title: Text(trip.title),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        // Botão personalizado para voltar com tooltip
+        leading: Builder(
+          builder: (context) => Tooltip(
+            message: 'Voltar',
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
