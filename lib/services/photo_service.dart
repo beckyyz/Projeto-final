@@ -90,12 +90,14 @@ class PhotoService {
   static Future<void> deletePhoto(String id) async {
     try {
       final photos = await getAllPhotos();
-      final index = photos.indexWhere((photo) => photo.id == id);
-      if (index != -1) {
+      final photoToDelete = photos.where((photo) => photo.id == id).firstOrNull;
+
+      if (photoToDelete != null) {
         // Deletar arquivo físico
-        await deletePhotoFile(photos[index].path);
+        await deletePhotoFile(photoToDelete.path);
+
         // Remover da lista
-        photos.removeAt(index);
+        photos.removeWhere((photo) => photo.id == id);
         await _savePhotos(photos);
       } else {
         throw Exception('Foto não encontrada');
