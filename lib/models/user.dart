@@ -2,6 +2,7 @@ class User {
   final String id;
   final String email;
   final String name;
+  final String password;
   final String? profileImagePath;
   final DateTime createdAt;
   final DateTime? updatedAt;
@@ -10,6 +11,7 @@ class User {
     required this.id,
     required this.email,
     required this.name,
+    required this.password,
     this.profileImagePath,
     required this.createdAt,
     this.updatedAt,
@@ -21,6 +23,7 @@ class User {
       'id': id,
       'email': email,
       'name': name,
+      'password': password,
       'profileImagePath': profileImagePath,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
@@ -33,6 +36,7 @@ class User {
       id: map['id'] ?? '',
       email: map['email'] ?? '',
       name: map['name'] ?? '',
+      password: map['password'] ?? '',
       profileImagePath: map['profileImagePath'],
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),
       updatedAt: map['updatedAt'] != null
@@ -46,6 +50,7 @@ class User {
     String? id,
     String? email,
     String? name,
+    String? password,
     String? profileImagePath,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -54,6 +59,7 @@ class User {
       id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
+      password: password ?? this.password,
       profileImagePath: profileImagePath ?? this.profileImagePath,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -62,7 +68,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, email: $email, name: $name, profileImagePath: $profileImagePath, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'User(id: $id, email: $email, name: $name, password: $password, profileImagePath: $profileImagePath, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override

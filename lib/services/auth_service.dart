@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
+import '../services/database_service.dart'; // Certifique-se de que o caminho está correto
+import '../services/user_service.dart';
 
 class AuthService {
   static const String _isLoggedInKey = 'is_logged_in';
@@ -27,24 +29,15 @@ class AuthService {
 
   // Fazer login
   static Future<bool> login(String email, String password) async {
-    // Simular validação de login (aqui você integraria com um backend real)
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (email.isNotEmpty && password.length >= 6) {
+    // Autenticação real usando o banco SQLite
+    final userMap = await DatabaseService.buscarUsuarioPorEmailESenha(email, password);
+    if (userMap != null) {
       final prefs = await SharedPreferences.getInstance();
-
-      // Verificar se o usuário existe (foi registrado anteriormente)
-      final registeredEmail = prefs.getString(_userEmailKey);
-      final registeredName = prefs.getString(_userNameKey);
-
-      // Apenas permitir login se o usuário foi registrado E o email corresponde
-      if (registeredEmail == email && registeredName != null) {
-        await prefs.setBool(_isLoggedInKey, true);
-        return true;
-      }
+      await prefs.setBool(_isLoggedInKey, true);
+      await prefs.setString(_userEmailKey, email);
+      await prefs.setString(_userNameKey, userMap['name'] ?? '');
+      return true;
     }
-
-    // Se chegou aqui, credenciais são inválidas ou usuário não existe
     return false;
   }
 
@@ -54,21 +47,17 @@ class AuthService {
     String email,
     String password,
   ) async {
-    // Simular registro (aqui você integraria com um backend real)
-    await Future.delayed(const Duration(seconds: 2));
-
-    // Por enquanto, aceita qualquer dados válidos
-    if (name.isNotEmpty && email.isNotEmpty && password.length >= 6) {
-      final prefs = await SharedPreferences.getInstance();
-      // Salvar dados do usuário sem fazer login automático
-      await prefs.setString(_userNameKey, name);
-      await prefs.setString(_userEmailKey, email);
-      // NÃO fazer login automático - usuário deve fazer login manualmente
-      await prefs.setBool(_isLoggedInKey, false);
+    try {
+      await UserService.createUser(
+        name: name,
+        email: email,
+        password: password,
+      );
       return true;
+    } catch (e, s) {
+      print('Erro ao registrar usuário: $e\n$s');
+      return false;
     }
-
-    return false;
   }
 
   // Fazer logout
@@ -94,6 +83,7 @@ class AuthService {
         id: email, // Usando email como ID temporário
         email: email,
         name: name ?? '',
+        password: '', // Adicione um valor padrão ou recupere a senha se possível
         createdAt: DateTime.now(),
       );
     }

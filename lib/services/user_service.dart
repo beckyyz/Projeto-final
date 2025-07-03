@@ -1,6 +1,7 @@
 import '../models/user.dart';
 import 'storage_service.dart';
 import 'auth_service.dart';
+import 'package:diario_viagem/services/database_service.dart';
 
 class UserService {
   static const String _usersKey = 'users';
@@ -10,6 +11,7 @@ class UserService {
   static Future<String> createUser({
     required String name,
     required String email,
+    required String password,
     String? profileImagePath,
   }) async {
     try {
@@ -18,20 +20,18 @@ class UserService {
         id: userId,
         email: email,
         name: name,
+        password: password,
         profileImagePath: profileImagePath,
         createdAt: DateTime.now(),
       );
 
-      final users = await getAllUsers();
-
       // Verificar se email já existe
-      if (users.any((u) => u.email == email)) {
+      final existing = await DatabaseService.buscarUsuarioPorEmail(email);
+      if (existing != null) {
         throw Exception('Email já está em uso');
       }
 
-      users.add(user);
-      await _saveUsers(users);
-
+      await DatabaseService.inserirUsuario(user.toMap());
       return userId;
     } catch (e) {
       throw Exception('Erro ao criar usuário: $e');
